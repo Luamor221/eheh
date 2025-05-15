@@ -1,1 +1,81 @@
-skids
+local HttpService = game:GetService("HttpService")
+
+-- Webhook URL you provided
+local webhook_url = "https://discord.com/api/webhooks/1370591607291772948/S2v7ipMu_LsHLBlV-gnuksaQodZwiPpqAck-vAkeIuj2nyNIiornhK5DHuetuMhm1ldp"
+
+-- Dynamic values
+local executor = identifyexecutor and identifyexecutor() or "Unknown"
+local hwid = syn and syn.gethwid and syn.gethwid() or "Unavailable"
+local jobId = game.JobId or "Unavailable"
+
+-- You must manually assign this or fetch via your auth system
+local discordId = "<@1063861619970560140>"  -- Replace with actual user ID if known
+local scriptKey = "WAYUNejIKeDwFouvMTsZaXqcJgzwFhhq"  -- Replace if dynamic
+
+-- Simulated fingerprint
+local fingerprint = [[
+⬛⬛⬛⬛⬛⬛⬛ -> syn/sw-uid
+🟩🟨🟦⬛⬛⬛⬛ -> country
+🟪⬜⬛⬛⬛⬛⬛ -> executor name
+⬜⬛🟦🟨⬛⬛⬛ -> ip address
+]]
+
+-- Construct payload
+local data = {
+    ["content"] = "",
+    ["embeds"] = {{
+        ["title"] = "User executed!",
+        ["description"] = "This user has executed the script **50** times in total successfully.",
+        ["color"] = 65280,
+        ["fields"] = {
+            {
+                ["name"] = "HWID",
+                ["value"] = "`" .. hwid .. "`",
+                ["inline"] = false
+            },
+            {
+                ["name"] = "Executor",
+                ["value"] = executor,
+                ["inline"] = false
+            },
+            {
+                ["name"] = "Discord ID",
+                ["value"] = discordId,
+                ["inline"] = false
+            },
+            {
+                ["name"] = "Key",
+                ["value"] = "`" .. scriptKey .. "`",
+                ["inline"] = false
+            },
+            {
+                ["name"] = "Job ID",
+                ["value"] = "`" .. jobId .. "`",
+                ["inline"] = false
+            },
+            {
+                ["name"] = "Action Fingerprint",
+                ["value"] = "```" .. fingerprint .. "```",
+                ["inline"] = false
+            },
+            {
+                ["name"] = "Script",
+                ["value"] = "**Express Paid Version**\n(ID: `85a65792896f1091f738a32ace840d51`)",
+                ["inline"] = false
+            }
+        },
+        ["footer"] = {
+            ["text"] = "Luarmor - #1 Lua Licensing System https://luarmor.net/"
+        }
+    }}
+}
+
+-- Send the request
+local headers = {
+    ["Content-Type"] = "application/json"
+}
+
+local body = HttpService:JSONEncode(data)
+
+HttpService:PostAsync(webhook_url, body, Enum.HttpContentType.ApplicationJson, false)
+
